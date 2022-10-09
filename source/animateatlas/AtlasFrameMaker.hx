@@ -62,7 +62,7 @@ class AtlasFrameMaker extends FlxFramesCollection{
 				#if MODS_ALLOWED
 				bitmapData = (FileSystem.exists('mods/images/$key/spritemap.png') || FileSystem.exists('mods/' + Paths.currentModDirectory + '/images/$key/spritemap.png') ? BitmapData.fromFile(Paths.modFolders('images/$key/spritemap.png')) : Assets.getBitmapData(Paths.getPath('images/$key/spritemap.png',IMAGE)));
 				
-				#else
+				
 				
 				
 				
