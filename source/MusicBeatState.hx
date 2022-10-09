@@ -11,8 +11,16 @@ import flixel.tweens.FlxTween;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
+import openfl.filters.ShaderFilter;
 import flixel.FlxState;
 import flixel.FlxBasic;
+#if android
+import android.AndroidControls;
+import android.flixel.FlxVirtualPad;
+import flixel.FlxCamera;
+import flixel.input.actions.FlxActionInput;
+import flixel.util.FlxDestroyUtil;
+#end
 
 class MusicBeatState extends FlxUIState
 {
@@ -21,21 +29,128 @@ class MusicBeatState extends FlxUIState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
+
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
+	#if android
+	var virtualPad:FlxVirtualPad;
+	var androidControls:AndroidControls;
+	var trackedinputsUI:Array<FlxActionInput> = [];
+	var trackedinputsNOTES:Array<FlxActionInput> = [];
+
+	public function addVirtualPad(DPad:FlxDPadMode, Action:FlxActionMode)
+	{
+		virtualPad = new FlxVirtualPad(DPad, Action);
+		add(virtualPad);
+
+		controls.setVirtualPadUI(virtualPad, DPad, Action);
+		trackedinputsUI = controls.trackedinputsUI;
+		controls.trackedinputsUI = [];
+	}
+
+	public function removeVirtualPad()
+	{
+		if (trackedinputsUI != [])
+			controls.removeAControlsInput(trackedinputsUI);
+
+		if (virtualPad != null)
+			remove(virtualPad);
+	}
+
+	public function addAndroidControls()
+	{
+		androidControls = new AndroidControls();
+
+		switch (AndroidControls.getMode())
+		{
+			case 'Pad-Right' | 'Pad-Left' | 'Pad-Custom':
+				controls.setVirtualPadNOTES(androidControls.virtualPad, RIGHT_FULL, NONE);
+			case 'Pad-Duo':
+				controls.setVirtualPadNOTES(androidControls.virtualPad, BOTH_FULL, NONE);
+			case 'Hitbox':
+				controls.setHitBox(androidControls.hitbox);
+			case 'Keyboard': // do nothing
+		}
+
+		trackedinputsNOTES = controls.trackedinputsNOTES;
+		controls.trackedinputsNOTES = [];
+
+		var camControls:FlxCamera = new FlxCamera();
+		FlxG.cameras.add(camControls);
+		camControls.bgColor.alpha = 0;
+
+		androidControls.cameras = [camControls];
+		androidControls.visible = false;
+		add(androidControls);
+	}
+
+	public function removeAndroidControls()
+	{
+		if (trackedinputsNOTES != [])
+			controls.removeAControlsInput(trackedinputsNOTES);
+
+		if (androidControls != null)
+			remove(androidControls);
+	}
+
+	public function addPadCamera()
+	{
+		if (virtualPad != null)
+		{
+			var camControls:FlxCamera = new FlxCamera();
+			FlxG.cameras.add(camControls);
+			camControls.bgColor.alpha = 0;
+			virtualPad.cameras = [camControls];
+		}
+	}
+	#end
+
+	override function destroy()
+	{
+		#if android
+		if (trackedinputsNOTES != [])
+			controls.removeAControlsInput(trackedinputsNOTES);
+
+		if (trackedinputsUI != [])
+			controls.removeAControlsInput(trackedinputsUI);
+		#end
+
+		super.destroy();
+
+		#if android
+		if (virtualPad != null)
+		{
+			virtualPad = FlxDestroyUtil.destroy(virtualPad);
+			virtualPad = null;
+		}
+
+		if (androidControls != null)
+		{
+			androidControls = FlxDestroyUtil.destroy(androidControls);
+			androidControls = null;
+		}
+		#end
+	}
+
 	override function create() {
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		super.create();
 
-		// Custom made Trans out
 		if(!skip) {
-			openSubState(new CustomFadeTransition(1, true));
+			openSubState(new CustomFadeTransition(0.7, true));
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 	}
+
+	public var chromaticAberration(get, never):ShaderFilter;
+	inline function get_chromaticAberration():ShaderFilter
+		return ChromaHandler.chromaticAberration;
+
+	public function setChrome(daChrome:Float):Void
+		ChromaHandler.setChrome(daChrome);
 	
 	#if (VIDEOS_ALLOWED && windows)
 	override public function onFocus():Void
@@ -61,6 +176,8 @@ class MusicBeatState extends FlxUIState
 
 		if (oldStep != curStep && curStep > 0)
 			stepHit();
+
+		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 
 		super.update(elapsed);
 	}
@@ -91,7 +208,7 @@ class MusicBeatState extends FlxUIState
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
 		if(!FlxTransitionableState.skipNextTransIn) {
-			leState.openSubState(new CustomFadeTransition(0.7, false));
+			leState.openSubState(new CustomFadeTransition(0.6, false));
 			if(nextState == FlxG.state) {
 				CustomFadeTransition.finishCallback = function() {
 					FlxG.resetState();
