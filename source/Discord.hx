@@ -7,7 +7,7 @@ import discord_rpc.DiscordRpc;
 
 #if LUA_ALLOWED
 import llua.Lua;
-import l#endlua.State;
+import llua.State;
 #end
 
 using StringTools;
