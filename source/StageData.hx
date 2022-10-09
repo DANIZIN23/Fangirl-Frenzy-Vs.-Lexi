@@ -1,6 +1,6 @@
 package;
 
-#if sys
+#if windows 
 import sys.io.File;
 import sys.FileSystem;
 #else
