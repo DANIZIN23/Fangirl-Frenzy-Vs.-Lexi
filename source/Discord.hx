@@ -1,12 +1,13 @@
 package;
 
-#if sys
+#if desktop
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
+#end
 
 #if LUA_ALLOWED
 import llua.Lua;
-import llua.State;
+import l#endlua.State;
 #end
 
 using StringTools;
