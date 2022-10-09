@@ -148,23 +148,23 @@ class MainMenuState extends MusicBeatState
 		}
 		#end
 
-		#if android
-		addVirtualPad(UP_DOWN, A_B);	
-		#end	
-		
-			super.create();
+                #if android
+	        addVirtualPad(UP_DOWN, A_B);
+                #end
+
+		super.create();
 	}
 
 	#if ACHIEVEMENTS_ALLOWED
 	// Unlocks "Freaky on a Friday Night" achievement
 	function giveAchievement() {
 		add(new AchievementObject('friday_night_play', camAchievement));
-		Flx#if androidG.sound.play(Paths.sound('confirmMenu'), 0.7);
+		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 		trace('Giving achievement "friday_night_play"');
 	}
 	#end
 
-	
+	var selectedSomethin:Bool = false;
 
 	override function update(elapsed:Float)
 	{
