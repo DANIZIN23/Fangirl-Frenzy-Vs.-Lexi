@@ -78,7 +78,7 @@ class AtlasFrameMaker extends FlxFramesCollection{
 				}else{
 					bitmapData = Assets.getBitmapData(Paths.getPath('images/$key/spritemap.png',IMAGE));
 				}*/
-                var ss = new SpriteAnimationLibrary(animationData, atlasData, bitmapData);
+                
                 var t = ss.createAnimation();
                 if(_excludeArray == null){
                 _excludeArray = t.getFrameLabels();
