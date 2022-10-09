@@ -1,6 +1,6 @@
 package;
 
-#if MODS_ALLOWED
+#if sys
 import sys.io.File;
 import sys.FileSystem;
 #else
