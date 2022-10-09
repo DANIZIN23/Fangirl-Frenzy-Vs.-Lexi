@@ -11,7 +11,6 @@ import flixel.tweens.FlxTween;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
-import openfl.filters.ShaderFilter;
 import flixel.FlxState;
 import flixel.FlxBasic;
 #if android
@@ -29,7 +28,6 @@ class MusicBeatState extends FlxUIState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
-
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
@@ -135,22 +133,17 @@ class MusicBeatState extends FlxUIState
 		#end
 	}
 
-	override function create() {
+
+override function create() {
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		super.create();
 
+		// Custom made Trans out
 		if(!skip) {
-			openSubState(new CustomFadeTransition(0.7, true));
+			openSubState(new CustomFadeTransition(1, true));
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 	}
-
-	public var chromaticAberration(get, never):ShaderFilter;
-	inline function get_chromaticAberration():ShaderFilter
-		return ChromaHandler.chromaticAberration;
-
-	public function setChrome(daChrome:Float):Void
-		ChromaHandler.setChrome(daChrome);
 	
 	#if (VIDEOS_ALLOWED && windows)
 	override public function onFocus():Void
@@ -176,8 +169,6 @@ class MusicBeatState extends FlxUIState
 
 		if (oldStep != curStep && curStep > 0)
 			stepHit();
-
-		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 
 		super.update(elapsed);
 	}
@@ -208,7 +199,7 @@ class MusicBeatState extends FlxUIState
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
 		if(!FlxTransitionableState.skipNextTransIn) {
-			leState.openSubState(new CustomFadeTransition(0.6, false));
+			leState.openSubState(new CustomFadeTransition(0.7, false));
 			if(nextState == FlxG.state) {
 				CustomFadeTransition.finishCallback = function() {
 					FlxG.resetState();
