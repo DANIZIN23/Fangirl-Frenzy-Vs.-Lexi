@@ -13,7 +13,7 @@ import animateatlas.displayobject.SpriteMovieClip;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
-#if MODS_ALLOWED
+#if desktop
 import sys.FileSystem;
 import sys.io.File;
 
@@ -65,7 +65,7 @@ class AtlasFrameMaker extends FlxFramesCollection{
 				#else
 				
 				//var paf = 'assets/images/$key/spritemap.png' ;
-				bitmapData = Assets.getBitmapData //new BitmapData(0,1);
+				bitmapData = Assets.getBitmapData(paf);//new BitmapData(0,1);
 				#end
 				
 				
