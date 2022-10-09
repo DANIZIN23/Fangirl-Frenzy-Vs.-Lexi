@@ -16,9 +16,7 @@ import flixel.graphics.frames.FlxFrame;
 #if MODS_ALLOWED
 import sys.FileSystem;
 import sys.io.File;
-#else
-import js.html.FileSystem;
-import js.html.File;
+
 #end
 class AtlasFrameMaker extends FlxFramesCollection{
 
