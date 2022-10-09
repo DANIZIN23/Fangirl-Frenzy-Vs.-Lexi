@@ -13,10 +13,12 @@ import animateatlas.displayobject.SpriteMovieClip;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
-#if desktop
+#if MODS_ALLOWED
 import sys.FileSystem;
 import sys.io.File;
-
+#else
+import js.html.FileSystem;
+import js.html.File;
 #end
 class AtlasFrameMaker extends FlxFramesCollection{
 
@@ -60,12 +62,11 @@ class AtlasFrameMaker extends FlxFramesCollection{
                 var atlasData:AtlasData = Json.parse(Paths.getTextFromFile('images/$key/spritemap.json'));
 				var bitmapData:BitmapData;
 				#if MODS_ALLOWED
-				bitmapData = (FileSystem.exists('mods/images/$key/spritemap.png') || FileSystem.exists('mods/' + Paths.currentModDirectory + '/images/$key/spritemap.png') ? BitmapData.fromFile(Paths.modFolders('images/$key/spritemap.png')) : Assets.getBitmapData(Paths.getPath('images/$key/spritemap.png',IMAGE)));
+				bitmapData = (FileSystem.exists('mods/images/$key/spritemap.png') || FileSystem.exists(SUtil.getPath() + 'mods/' + Paths.currentModDirectory + '/images/$key/spritemap.png') ? BitmapData.fromFile(Paths.modFolders('images/$key/spritemap.png')) : Assets.getBitmapData(Paths.getPath('images/$key/spritemap.png',IMAGE)));
 				
 				#else
 				
-				
-				//var paf = 'assets/images/$key/spritemap.png' ;	
+				//var paf = 'assets/images/$key/spritemap.png' ;
 				bitmapData = Assets.getBitmapData(paf);//new BitmapData(0,1);
 				#end
 				
