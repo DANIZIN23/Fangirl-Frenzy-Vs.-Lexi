@@ -1,2 +1,2 @@
-# Fangirl-Frenzy-Vs.-Lexi
- Vai se fuder Enzo Kakakakaka
+# Fangirl-Frenzy-Vs.-Lexi Android Source 
+ENZO RACHA CABESA 😂
